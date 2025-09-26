@@ -1,10 +1,8 @@
 node_modules
 build
-.git
-.gitignore
-Dockerfile
-Dockerfile.dev
-docker-compose.yml
+dist
+.env
+.env.*.local
 npm-debug.log*
 yarn.lock
 pnpm-lock.yaml

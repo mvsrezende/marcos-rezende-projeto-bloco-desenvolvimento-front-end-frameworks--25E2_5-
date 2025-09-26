@@ -1,24 +1,19 @@
-.sobre {
-  padding: 1rem 0.5rem;
-  background: #f8f9fb;
-  border-radius: 8px;
-  margin-top: 1.5rem;
+.wrap{ padding-block: var(--space-6); }
+.title{
+  margin:0 0 var(--space-3) 0; font-weight:900;
+  background: var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-
-.sobre h2 {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
+.lead{
+  composes: card from global; padding: var(--space-4);
+  font-size:1rem; color: var(--muted);
 }
-
-.sobre p {
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 0.7rem;
+.grid{
+  margin-top: var(--space-3);
+  display:grid; gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
 }
-
-@media (min-width: 600px) {
-  .sobre {
-    padding: 2rem 3rem;
-    font-size: 1.1rem;
-  }
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+  border:1px solid var(--card-border); border-radius: var(--radius-l);
+  box-shadow: var(--shadow-2); padding: var(--space-4);
 }

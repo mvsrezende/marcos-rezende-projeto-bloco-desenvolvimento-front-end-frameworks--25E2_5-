@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ToastProvider } from "./context/ToastContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -22,57 +22,31 @@ type Ingresso = Evento & { foto?: string };
 
 function seed(tenant: string): Evento[] {
   return [
-    {
-      id: 1,
-      nome: "Show de Rock",
-      data: "2025-10-12",
-      local: "Arena Central",
-      tenant,
-      arquivado: false,
-    },
-    {
-      id: 2,
-      nome: "Festival de Comida",
-      data: "2025-11-05",
-      local: "Praça Verde",
-      tenant,
-      arquivado: false,
-    },
-    {
-      id: 3,
-      nome: "Peça de Teatro",
-      data: "2025-12-01",
-      local: "Teatro Municipal",
-      tenant,
-      arquivado: false,
-    },
+    { id: 1, nome: "Show de Rock", data: "2025-10-12", local: "Arena Central", tenant, arquivado: false },
+    { id: 2, nome: "Festival de Comida", data: "2025-11-05", local: "Praça Verde", tenant, arquivado: false },
+    { id: 3, nome: "Peça de Teatro", data: "2025-12-01", local: "Teatro Municipal", tenant, arquivado: false }
   ];
 }
 
 function AppShell() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, tenant, logout } = useAuth();
   const [meusIngressos, setMeusIngressos] = useState<Ingresso[]>([]);
-  const [eventos, setEventos] = useState<Evento[]>(() =>
-    user ? seed(user.tenant) : []
-  );
+  const [eventos, setEventos] = useState<Evento[]>([]);
   const [attachId, setAttachId] = useState<number | null>(null);
   const mainRef = useRef<HTMLElement | null>(null);
   const { useToast } = require("./context/ToastContext");
   const { show } = useToast();
 
-  useMemo(() => {
-    if (user) setEventos(seed(user.tenant));
-  }, [user]);
+  useEffect(() => {
+    if (tenant) setEventos(seed(tenant));
+  }, [tenant]);
 
   useEffect(() => {
     if (isAuthenticated && mainRef.current) mainRef.current.focus();
   }, [isAuthenticated]);
 
   function handleComprar(evento: Evento) {
-    setMeusIngressos((prev) => [
-      ...prev,
-      { ...evento, tenant: user?.tenant, foto: undefined },
-    ]);
+    setMeusIngressos((prev) => [...prev, { ...evento, tenant: tenant || undefined, foto: undefined }]);
     show("success", `Ingresso comprado: ${evento.nome}`);
   }
   function criarEvento(e: Omit<Evento, "id">) {
@@ -84,9 +58,7 @@ function AppShell() {
     });
   }
   function atualizarEvento(e: Evento) {
-    setEventos((prev) =>
-      prev.map((it) => (it.id === e.id ? { ...it, ...e } : it))
-    );
+    setEventos((prev) => prev.map((it) => (it.id === e.id ? { ...it, ...e } : it)));
     show("info", `Evento atualizado: ${e.nome}`);
   }
   function removerEvento(id: number) {
@@ -96,9 +68,7 @@ function AppShell() {
   }
   function arquivarEvento(id: number) {
     const alvo = eventos.find((it) => it.id === id);
-    setEventos((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, arquivado: true } : it))
-    );
+    setEventos((prev) => prev.map((it) => (it.id === id ? { ...it, arquivado: true } : it)));
     show("warn", `Evento arquivado: ${alvo?.nome || id}`);
   }
   function refreshEventos() {
@@ -110,43 +80,28 @@ function AppShell() {
   }
   function onCaptured(photo: string) {
     if (attachId == null) return;
-    setMeusIngressos((prev) =>
-      prev.map((ing) => (ing.id === attachId ? { ...ing, foto: photo } : ing))
-    );
+    setMeusIngressos((prev) => prev.map((ing) => (ing.id === attachId ? { ...ing, foto: photo } : ing)));
     setAttachId(null);
     show("success", "Foto anexada ao ingresso.");
   }
   function onRemovePhoto(id: number) {
-    setMeusIngressos((prev) =>
-      prev.map((ing) => (ing.id === id ? { ...ing, foto: undefined } : ing))
-    );
+    setMeusIngressos((prev) => prev.map((ing) => (ing.id === id ? { ...ing, foto: undefined } : ing)));
     show("info", "Foto removida do ingresso.");
   }
 
   return (
     <>
       <SkipLink />
-      {isAuthenticated && user && (
-        <Header
-          username={user.name || user.email}
-          tenant={user.tenant}
-          onLogout={logout}
-        />
-      )}
+      {isAuthenticated && user && <Header username={user.displayName || user.email || ""} tenant={tenant || undefined} onLogout={logout} />}
       <main id="main-content" className="container" ref={mainRef} tabIndex={-1}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/login" element={<AuthForm />} />
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <AuthForm />}
+          />
           <Route element={<ProtectedRoute />}>
-            <Route
-              path="/dashboard"
-              element={
-                <Dashboard
-                  eventos={eventos}
-                  totalIngressos={meusIngressos.length}
-                />
-              }
-            />
+            <Route path="/dashboard" element={<Dashboard eventos={eventos} totalIngressos={meusIngressos.length} />} />
             <Route
               path="/eventos"
               element={
@@ -181,9 +136,7 @@ function AppShell() {
       </main>
       {isAuthenticated && <Footer />}
       <Toast />
-      {attachId !== null && (
-        <CameraModal onClose={() => setAttachId(null)} onCapture={onCaptured} />
-      )}
+      {attachId !== null && <CameraModal onClose={() => setAttachId(null)} onCapture={onCaptured} />}
     </>
   );
 }

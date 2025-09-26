@@ -3,21 +3,31 @@ import {
   getAuth,
   setPersistence,
   browserLocalPersistence,
-  inMemoryPersistence,
+  inMemoryPersistence
 } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+function mustGet(name: string): string {
+  const v = (process.env as any)[name] as string | undefined;
+  if (!v) {
+    throw new Error(`Missing env var: ${name}`);
+  }
+  return v;
+}
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAauYW0CeT3IsqAdJtU-TiAc4Wht9K9Zhc",
-  authDomain: "infnet-7cc8b.firebaseapp.com",
-  projectId: "infnet-7cc8b",
-  storageBucket: "infnet-7cc8b.firebasestorage.app",
-  messagingSenderId: "758044400313",
-  appId: "1:758044400313:web:103f6ddc7bf9f02eab5968",
-  measurementId: "G-H8D201QZX9",
+  apiKey: mustGet("REACT_APP_FIREBASE_API_KEY"),
+  authDomain: mustGet("REACT_APP_FIREBASE_AUTH_DOMAIN"),
+  projectId: mustGet("REACT_APP_FIREBASE_PROJECT_ID"),
+  storageBucket: mustGet("REACT_APP_FIREBASE_STORAGE_BUCKET"),
+  messagingSenderId: mustGet("REACT_APP_FIREBASE_MESSAGING_SENDER_ID"),
+  appId: mustGet("REACT_APP_FIREBASE_APP_ID"),
+  measurementId: (process.env as any)["REACT_APP_FIREBASE_MEASUREMENT_ID"]
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 
 (async () => {
   try {

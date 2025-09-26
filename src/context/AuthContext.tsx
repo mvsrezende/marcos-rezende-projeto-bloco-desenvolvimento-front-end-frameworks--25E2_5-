@@ -1,116 +1,75 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { auth } from "../services/firebase";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword,
-  updateProfile,
+  User
 } from "firebase/auth";
+import { auth } from "../services/firebase";
 
-type UserData = {
-  uid: string;
-  email: string;
-  name?: string | null;
-  tenant: string;
-};
-
-type AuthCtx = {
+type AuthContextType = {
+  user: User | null;
   isAuthenticated: boolean;
-  user: UserData | null;
-  login: (email: string, password: string, tenant: string) => Promise<void>;
-  signup: (
-    name: string,
-    email: string,
-    password: string,
-    tenant: string
-  ) => Promise<void>;
+  loading: boolean;
+  tenant: string | null;
+  login: (email: string, password: string, tenant?: string) => Promise<void>;
+  signup: (email: string, password: string, tenant?: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
-const Ctx = createContext<AuthCtx | undefined>(undefined);
-const TENANT_KEY = "ingressos_tenant";
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [ready, setReady] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [tenant, setTenant] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem("tenant") || null;
+    } catch {
+      return null;
+    }
+  });
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (fbUser) => {
-      const savedTenant = localStorage.getItem(TENANT_KEY) || "default";
-      if (fbUser) {
-        setUser({
-          uid: fbUser.uid,
-          email: fbUser.email || "",
-          name: fbUser.displayName,
-          tenant: savedTenant,
-        });
-      } else {
-        setUser(null);
-      }
-      setReady(true);
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u || null);
+      setLoading(false);
     });
     return () => unsub();
   }, []);
 
-  async function login(email: string, password: string, tenant: string) {
+  useEffect(() => {
+    try {
+      if (tenant) localStorage.setItem("tenant", tenant);
+    } catch {}
+  }, [tenant]);
+
+  async function login(email: string, password: string, t?: string) {
     await signInWithEmailAndPassword(auth, email, password);
-    localStorage.setItem(TENANT_KEY, tenant || "default");
-    const fbUser = auth.currentUser;
-    if (fbUser) {
-      setUser({
-        uid: fbUser.uid,
-        email: fbUser.email || "",
-        name: fbUser.displayName,
-        tenant: tenant || "default",
-      });
-    }
+    if (t) setTenant(t);
   }
 
-  async function signup(
-    name: string,
-    email: string,
-    password: string,
-    tenant: string
-  ) {
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    if (name) await updateProfile(cred.user, { displayName: name });
-    localStorage.setItem(TENANT_KEY, tenant || "default");
-    const fbUser = auth.currentUser;
-    if (fbUser) {
-      setUser({
-        uid: fbUser.uid,
-        email: fbUser.email || "",
-        name: fbUser.displayName,
-        tenant: tenant || "default",
-      });
-    }
+  async function signup(email: string, password: string, t?: string) {
+    await createUserWithEmailAndPassword(auth, email, password);
+    if (t) setTenant(t);
   }
 
   async function logout() {
     await signOut(auth);
-    localStorage.removeItem(TENANT_KEY);
-    setUser(null);
   }
 
-  const value = useMemo(
-    () => ({
-      isAuthenticated: !!user,
-      user,
-      login,
-      signup,
-      logout,
-    }),
-    [user]
+  return (
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, loading, tenant, login, signup, logout }}
+    >
+      {!loading && children}
+    </AuthContext.Provider>
   );
-
-  if (!ready) return null;
-
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
 export function useAuth() {
-  const ctx = useContext(Ctx);
+  const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth deve ser usado dentro de AuthProvider");
   return ctx;
 }

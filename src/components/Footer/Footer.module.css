@@ -1,22 +1,12 @@
-.footer {
-  width: 100%;
-  background: #191d24;
-  color: #fafbfc;
-  font-size: 1rem;
-  padding: 1rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-  margin-top: 2rem;
-  border-radius: 8px 8px 0 0;
+.footer{
+  margin-top: var(--space-6);
+  background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.4));
+  border-top:1px solid var(--card-border);
 }
-
-@media (min-width: 600px) {
-  .footer {
-    font-size: 1.1rem;
-    padding: 1.2rem 2rem;
-    flex-direction: row;
-    justify-content: space-between;
-  }
+.inner{
+  width:100%; max-width:min(1200px, 92vw); margin-inline:auto;
+  padding: 1rem clamp(.9rem,2vw,1.4rem);
+  display:flex; align-items:center; justify-content:space-between; gap:.6rem; flex-wrap:wrap;
+  color: var(--muted); font-size:.95rem;
 }
+.brand{ font-weight:700; color:var(--text); }

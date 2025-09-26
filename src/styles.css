@@ -1,84 +1,157 @@
-:root {
-  --bg: #fafbfc;
-  --card: #ffffff;
-  --text: #111317;
-  --muted: #555b66;
-  --border: #e3e5ea;
-  --focus: #1a73e8;
-  --primary: #191d24;
+/* ====== Tema global: Aurora Glass ====== */
+:root{
+  --bg: #0e1116;
+  --bg-2: #131823;
+  --gradient: linear-gradient(135deg,#7c3aed, #2563eb 40%, #06b6d4 85%);
+  --glass: rgba(255,255,255,0.06);
+  --glass-strong: rgba(255,255,255,0.12);
+
+  --card: rgba(255,255,255,0.06);
+  --card-border: rgba(255,255,255,0.10);
+  --text: #f5f7fb;
+  --muted: #b8c0d0;
+  --primary: #7c3aed;
   --primary-contrast: #ffffff;
-  --danger: #e53935;
+  --focus: #22d3ee;
+  --success: #10b981;
+  --warn: #f59e0b;
+  --danger: #ef4444;
   --danger-contrast: #ffffff;
 
-  --radius-s: 8px;
-  --radius-m: 12px;
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 22px;
 
-  --space-1: 0.5rem;
-  --space-2: 0.75rem;
+  --shadow-1: 0 10px 30px rgba(0,0,0,.25);
+  --shadow-2: 0 18px 40px rgba(0,0,0,.35);
+
+  --space-1: .5rem;
+  --space-2: .75rem;
   --space-3: 1rem;
   --space-4: 1.25rem;
   --space-5: 1.75rem;
   --space-6: 2.25rem;
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-  height: 100%;
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#eef2ff;
+    --bg-2:#eaf0ff;
+    --card:rgba(255,255,255,0.7);
+    --card-border: rgba(2,6,23,0.08);
+    --text:#0b1220;
+    --muted:#3d4658;
+  }
 }
 
-body {
-  margin: 0;
-  height: 100%;
-  min-height: 100%;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.45;
-  font-size: clamp(15px, 1.1vw, 18px);
+html, body{ height:100%; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body{
+  margin:0;
+  min-height:100%;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 800px at 10% -10%, #1e293b 10%, transparent 55%),
+    radial-gradient(800px 600px at 90% 0%, #0ea5e9 5%, transparent 40%),
+    radial-gradient(900px 700px at 50% 110%, #7c3aed 0%, transparent 40%),
+    var(--bg-2);
+  background-attachment: fixed;
+  line-height:1.5;
+  font-size: clamp(15px, 1.05vw, 18px);
 }
 
-/* container FLUIDO: ocupa até 92vw e limita em 1280px */
-.container {
-  width: 100%;
-  max-width: min(1280px, 92vw);
-  margin-inline: auto;
-  padding-inline: clamp(0.75rem, 2vw, 1.25rem);
+/* container fluido */
+.container{
+  width:100%;
+  max-width:min(1200px, 92vw);
+  margin-inline:auto;
+  padding-inline: clamp(0.9rem, 2vw, 1.4rem);
 }
 
-/* acessibilidade */
-*:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-
-a { color: inherit; }
-
-/* utilitários */
-.card {
+/* vidro */
+.glass{
   background: var(--card);
-  border: 1px solid var(--border);
+  backdrop-filter: blur(12px) saturate(120%);
+  border:1px solid var(--card-border);
+  box-shadow: var(--shadow-1);
   border-radius: var(--radius-m);
-  box-shadow: 0 4px 18px #0001;
 }
 
-.muted { color: var(--muted); }
+/* botões */
+.btn{
+  border:1px solid transparent;
+  border-radius: var(--radius-s);
+  padding:.65rem 1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+  will-change: transform;
+}
+.btn:active{ transform: translateY(1px) scale(.99); }
+.btn:focus-visible{ outline:3px solid var(--focus); outline-offset:2px; }
 
-/* espaçamento padrão de seções */
-section {
-  padding-block: var(--space-5);
+.btn-primary{
+  background: linear-gradient(180deg, #8b5cf6, #7c3aed 70%);
+  color: var(--primary-contrast);
+  box-shadow: 0 10px 22px rgba(124,58,237,.35);
+}
+.btn-ghost{
+  background: rgba(255,255,255,.06);
+  border-color: var(--card-border);
+  color: var(--text);
+}
+.btn-secondary{
+  background: rgba(255,255,255,.14);
+  border-color: var(--card-border);
+}
+.btn-danger{
+  background: linear-gradient(180deg, #fb7185, #ef4444 70%);
+  color: var(--danger-contrast);
+  box-shadow: 0 10px 22px rgba(239,68,68,.35);
 }
 
-/* header fixo já está com container no App; garante sombra leve */
-header { box-shadow: 0 2px 8px #0001; }
+/* títulos */
+h1,h2,h3{ letter-spacing:.2px; }
+h1{ font-size: clamp(1.6rem, 3.2vw, 2.2rem); margin:0; }
+h2{ font-size: clamp(1.2rem, 2.4vw, 1.6rem); margin:.2rem 0 .8rem; }
+h3{ font-size: clamp(1.05rem, 2vw, 1.2rem); margin:.2rem 0 .6rem; }
 
-/* footer ocupando toda a largura, mas centrado internamente */
-footer .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  padding-block: var(--space-3);
+a{ color:inherit; }
+
+/* foco acessível genérico */
+*:focus-visible{
+  outline:3px solid var(--focus);
+  outline-offset:2px;
+  border-radius:10px;
+}
+
+/* cards e sombras */
+.card{ composes: glass; padding:var(--space-4); }
+.badge{
+  background: rgba(255,255,255,.14);
+  border:1px solid var(--card-border);
+  color: var(--text);
+  border-radius: 999px;
+  padding:.25rem .65rem;
+  font-size:.85rem;
+}
+
+/* seções */
+section{ padding-block: var(--space-6); }
+
+/* header e footer terão container interno */
+header, footer{ backdrop-filter: blur(8px) saturate(130%); }
+
+/* toast (seu componente deve herdar essas variáveis se usar CSS variables) */
+.toast-success{ background: rgba(16,185,129,.15); border-left:4px solid var(--success); }
+.toast-warn{ background: rgba(245,158,11,.18); border-left:4px solid var(--warn); }
+.toast-error{ background: rgba(239,68,68,.18); border-left:4px solid var(--danger); }
+
+/* utilidades */
+.muted{ color:var(--muted); }
+.grid-auto{
+  display:grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
 }

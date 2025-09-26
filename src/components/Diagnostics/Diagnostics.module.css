@@ -1,103 +1,23 @@
-.wrap {
-  padding: 1rem 0.5rem;
+.wrap{ padding-block: var(--space-6); }
+.title{
+  margin:0 0 var(--space-3) 0; font-weight:900;
+  background: var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-
-.banner {
-  background: #fff3cd;
-  color: #5c4700;
-  border: 1px solid #ffe69c;
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-  margin-bottom: 0.8rem;
+.grid{
+  display:grid; gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
 }
-
-.grid {
-  display: grid;
-  gap: 0.8rem;
-  grid-template-columns: 1fr;
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+  border:1px solid var(--card-border); border-radius: var(--radius-l);
+  box-shadow: var(--shadow-2); padding: var(--space-4);
 }
-
-.card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 4px 18px #0001;
-  display: grid;
-  gap: 0.5rem;
-  align-content: start;
+.table{
+  width:100%; border-collapse: collapse; font-size:.96rem;
 }
-
-.label {
-  font-weight: 700;
+.table th, .table td{
+  padding:.55rem .7rem; border-bottom:1px solid var(--card-border);
 }
-
-.ok {
-  color: #116329;
-  background: #e7f6ec;
-  border: 1px solid #b8e6c6;
-  border-radius: 8px;
-  padding: 0.3rem 0.5rem;
-  width: fit-content;
-}
-
-.bad {
-  color: #8b1111;
-  background: #fde7e7;
-  border: 1px solid #f5c2c2;
-  border-radius: 8px;
-  padding: 0.3rem 0.5rem;
-  width: fit-content;
-}
-
-.status {
-  color: var(--muted);
-  text-transform: lowercase;
-}
-
-.btn {
-  background: var(--primary);
-  color: var(--primary-contrast);
-  border: none;
-  border-radius: 8px;
-  padding: 0.55rem 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  width: fit-content;
-}
-
-.errorBox {
-  margin-top: 0.8rem;
-  background: #fde7e7;
-  color: #8b1111;
-  border: 1px solid #f5c2c2;
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-}
-
-.hints {
-  margin-top: 1rem;
-  background: #f8f9fb;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem;
-}
-
-.hints h3 {
-  margin-bottom: 0.5rem;
-}
-
-.hints ul {
-  padding-left: 1rem;
-  display: grid;
-  gap: 0.35rem;
-}
-
-@media (min-width: 700px) {
-  .wrap {
-    padding: 2rem 3rem;
-  }
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
+.table th{ text-align:left; color: var(--muted); font-weight:700; }
+.kv{ display:grid; gap:.35rem; }
+.badge{ composes: badge from global; }

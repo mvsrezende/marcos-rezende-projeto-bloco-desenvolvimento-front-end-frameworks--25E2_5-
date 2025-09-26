@@ -19,19 +19,18 @@ export default function CameraCapture() {
   async function startCamera() {
     try {
       setStatus("Solicitando câmera...");
-      stopCamera();
+      setActive(true);
+      await new Promise((r) => requestAnimationFrame(() => r(null)));
+
+      stopCamera(false);
 
       const stream = await getBestCameraStream(facingMode);
-      if (!stream) throw new Error("Stream vazio");
-
-      const videoTracks = stream.getVideoTracks();
-      if (!videoTracks.length) throw new Error("Nenhuma trilha de vídeo ativa");
-
-      streamRef.current = stream;
+      if (!stream) throw new Error("Fluxo de mídia vazio");
 
       const video = videoRef.current;
       if (!video) throw new Error("Elemento de vídeo não encontrado");
 
+      streamRef.current = stream;
       video.srcObject = stream;
       video.setAttribute("playsinline", "true");
       video.muted = true;
@@ -46,11 +45,8 @@ export default function CameraCapture() {
 
       try {
         await video.play();
-      } catch {
-        // Alguns navegadores exigem gesto do usuário; o botão "Capturar" também dispara play
-      }
+      } catch {}
 
-      setActive(true);
       setPhoto(null);
       setStatus("");
       show("success", "Câmera iniciada.");
@@ -58,29 +54,28 @@ export default function CameraCapture() {
       const msg = String(e?.message || e);
       setStatus(`Erro ao iniciar: ${msg}`);
       show("error", "Não foi possível acessar a câmera.");
+      setActive(false);
       stopCamera();
     }
   }
 
-  function stopCamera() {
+  function stopCamera(clearStatus: boolean = true) {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
     }
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.srcObject = null;
-      videoRef.current.removeAttribute("src");
+    const video = videoRef.current;
+    if (video) {
+      video.pause();
+      video.srcObject = null;
+      video.removeAttribute("src");
     }
-    setActive(false);
+    if (clearStatus) setStatus("");
   }
 
   function ensurePlaying() {
     const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) {
-      v.play().catch(() => {});
-    }
+    if (v && v.paused) v.play().catch(() => {});
   }
 
   function takePhoto() {
@@ -88,19 +83,16 @@ export default function CameraCapture() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-
     const w = video.videoWidth || 640;
     const h = video.videoHeight || 480;
     if (!w || !h) {
       show("warn", "Vídeo ainda não carregou. Tente novamente.");
       return;
     }
-
     canvas.width = w;
     canvas.height = h;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
     ctx.drawImage(video, 0, 0, w, h);
     const dataUrl = canvas.toDataURL("image/png");
     setPhoto(dataUrl);
@@ -130,7 +122,14 @@ export default function CameraCapture() {
             Iniciar câmera
           </button>
         ) : (
-          <button className={styles.secondary} onClick={stopCamera} aria-label="Parar câmera">
+          <button
+            className={styles.secondary}
+            onClick={() => {
+              setActive(false);
+              stopCamera();
+            }}
+            aria-label="Parar câmera"
+          >
             Parar
           </button>
         )}
@@ -146,10 +145,7 @@ export default function CameraCapture() {
 
         <button
           className={styles.primary}
-          onClick={() => {
-            ensurePlaying();
-            takePhoto();
-          }}
+          onClick={takePhoto}
           aria-label="Capturar foto"
           disabled={!active}
         >
@@ -165,13 +161,8 @@ export default function CameraCapture() {
 
       <div className={styles.stage}>
         <div className={styles.videoBox} aria-live="polite" aria-label="Pré-visualização da câmera">
-          {active ? (
-            <video ref={videoRef} className={styles.video} playsInline muted />
-          ) : (
-            <div className={styles.placeholder} role="img" aria-label="Câmera desligada">
-              Câmera desligada
-            </div>
-          )}
+          <video ref={videoRef} className={styles.video} playsInline muted />
+          {!active && <div className={styles.placeholder}>Câmera desligada</div>}
         </div>
 
         <div className={styles.resultBox}>
@@ -192,10 +183,7 @@ export default function CameraCapture() {
               const file = e.target.files?.[0];
               if (!file) return;
               const reader = new FileReader();
-              reader.onload = () => {
-                setPhoto(String(reader.result));
-                show("success", "Foto carregada do dispositivo.");
-              };
+              reader.onload = () => setPhoto(String(reader.result));
               reader.readAsDataURL(file);
             }}
           />
