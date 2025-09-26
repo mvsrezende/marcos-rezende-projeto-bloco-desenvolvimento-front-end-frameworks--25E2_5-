@@ -1,0 +1,27 @@
+$bg: #fafbfc;
+$text: #111317;
+$muted: #555b66;
+$primary: #191d24;
+$primary-contrast: #ffffff;
+$border: #d9dbe1;
+$focus: #1a73e8;
+$card: #ffffff;
+$warn: #ffd966;
+$warn-text: #5a4a00;
+$danger: #e53935;
+$danger-contrast: #ffffff;
+
+:root {
+  --bg: #{$bg};
+  --text: #{$text};
+  --muted: #{$muted};
+  --primary: #{$primary};
+  --primary-contrast: #{$primary-contrast};
+  --border: #{$border};
+  --focus: #{$focus};
+  --card: #{$card};
+  --warn: #{$warn};
+  --warn-text: #{$warn-text};
+  --danger: #{$danger};
+  --danger-contrast: #{$danger-contrast};
+}

@@ -1,0 +1,127 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #f5f6fa;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 8px #0001;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 0.9rem;
+  min-height: 52px;
+}
+
+.title {
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  margin: 0;
+  color: var(--text);
+}
+
+.burger {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.45rem 0.55rem;
+}
+
+.burgerBar {
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  display: block;
+}
+
+.nav {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.25s ease;
+  background: #fff;
+  border-top: 1px solid var(--border);
+}
+
+.open {
+  max-height: 500px;
+}
+
+.link {
+  display: block;
+  padding: 0.7rem 0.9rem;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid #f0f1f4;
+}
+
+.link:last-of-type {
+  border-bottom: none;
+}
+
+.link:hover,
+.link[aria-current="page"] {
+  background: #eef1f7;
+}
+
+.userBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem 0.9rem;
+}
+
+.username {
+  font-size: 0.95rem;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout {
+  background: var(--danger);
+  color: var(--danger-contrast);
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+@media (min-width: 760px) {
+  .burger {
+    display: none;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-height: none;
+    border-top: none;
+    background: #f5f6fa;
+    padding: 0.6rem 1rem 0.9rem;
+  }
+
+  .link {
+    border: none;
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+  }
+
+  .userBox {
+    padding: 0;
+    margin-left: auto;
+  }
+
+  .link:hover,
+  .link[aria-current="page"] {
+    background: #e9edf6;
+  }
+}

@@ -1,0 +1,105 @@
+.wrapper {
+  padding: 1rem 0.5rem;
+}
+
+.controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+
+.primary,
+.secondary,
+.ghost {
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.primary {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.secondary {
+  background: #e0e0e0;
+  color: #111;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.stage {
+  display: grid;
+  gap: 1rem;
+}
+
+.videoBox {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+}
+
+.video {
+  width: 100%;
+  height: auto;
+}
+
+.placeholder {
+  color: #fff;
+  opacity: 0.8;
+  padding: 2rem 0;
+}
+
+.resultBox {
+  background: #f8f9fb;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.preview {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 0.6rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.fileInput {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+.canvas {
+  position: absolute;
+  inset: -9999px auto auto -9999px;
+  width: 1px;
+  height: 1px;
+}
+
+@media (min-width: 700px) {
+  .stage {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}

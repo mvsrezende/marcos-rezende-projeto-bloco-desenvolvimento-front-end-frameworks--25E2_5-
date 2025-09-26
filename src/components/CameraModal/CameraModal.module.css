@@ -1,0 +1,83 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: #0006;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1100;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 10px 30px #0004;
+  padding: 1.2rem;
+}
+
+h3 {
+  margin-bottom: 0.8rem;
+  font-size: 1.25rem;
+}
+
+.stage {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.videoBox {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+}
+
+.video {
+  width: 100%;
+  height: auto;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.switch,
+.capture,
+.cancel {
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.switch {
+  background: #e0e0e0;
+  color: #111;
+}
+
+.capture {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.cancel {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.canvas {
+  position: absolute;
+  inset: -9999px auto auto -9999px;
+  width: 1px;
+  height: 1px;
+}

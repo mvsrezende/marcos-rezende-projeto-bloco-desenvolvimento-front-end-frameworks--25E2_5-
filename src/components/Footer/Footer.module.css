@@ -1,0 +1,22 @@
+.footer {
+  width: 100%;
+  background: #191d24;
+  color: #fafbfc;
+  font-size: 1rem;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 2rem;
+  border-radius: 8px 8px 0 0;
+}
+
+@media (min-width: 600px) {
+  .footer {
+    font-size: 1.1rem;
+    padding: 1.2rem 2rem;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

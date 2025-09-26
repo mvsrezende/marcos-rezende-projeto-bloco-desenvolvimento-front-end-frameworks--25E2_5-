@@ -1,0 +1,128 @@
+.item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.mainRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+}
+
+.main {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.main:focus-visible,
+.reveal:focus-visible,
+.actions button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.info {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.title {
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.tag {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  background: #f0f0f0;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  color: #333;
+}
+
+.swipeHint {
+  position: absolute;
+  right: 0.6rem;
+  top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: #f5f6fa;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+}
+
+.reveal {
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border: none;
+  padding: 0 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.45rem;
+  padding: 0.6rem;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(90deg, #fafafa, #fff);
+}
+
+.btn,
+.warn,
+.danger {
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.warn {
+  background: var(--warn);
+  color: var(--warn-text);
+}
+
+.danger {
+  background: var(--danger);
+  color: var(--danger-contrast);
+}
+
+.archived {
+  opacity: 0.8;
+}
+
+.revealed .actions {
+  background: linear-gradient(90deg, #eef1f7, #fff);
+}
+
+@media (min-width: 600px) {
+  .item {
+    display: grid;
+    grid-template-rows: auto auto;
+  }
+}

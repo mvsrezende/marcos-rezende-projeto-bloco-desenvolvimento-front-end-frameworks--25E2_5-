@@ -1,0 +1,127 @@
+.wrap {
+  padding-block: var(--space-5);
+}
+
+.headRow {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.title {
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  margin: 0;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: auto;
+  justify-content: end;
+}
+
+.export {
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border: none;
+  border-radius: var(--radius-s);
+  padding: 0.65rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.empty {
+  color: var(--muted);
+  font-size: 1rem;
+  padding: 0.8rem;
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  box-shadow: 0 4px 18px #0001;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.name {
+  font-size: 1.05rem;
+}
+
+.badge {
+  background: #eef1f7;
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.body {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.local {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.photo {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+}
+
+.noPhoto {
+  height: 160px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: #f6f7fb;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.attach {
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border: none;
+  border-radius: var(--radius-s);
+  padding: 0.55rem 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.remove {
+  background: var(--danger);
+  color: var(--danger-contrast);
+  border: none;
+  border-radius: var(--radius-s);
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+}

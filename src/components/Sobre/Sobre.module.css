@@ -1,0 +1,24 @@
+.sobre {
+  padding: 1rem 0.5rem;
+  background: #f8f9fb;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+}
+
+.sobre h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.sobre p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.7rem;
+}
+
+@media (min-width: 600px) {
+  .sobre {
+    padding: 2rem 3rem;
+    font-size: 1.1rem;
+  }
+}

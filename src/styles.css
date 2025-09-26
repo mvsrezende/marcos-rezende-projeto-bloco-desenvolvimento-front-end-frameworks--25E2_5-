@@ -1,0 +1,84 @@
+:root {
+  --bg: #fafbfc;
+  --card: #ffffff;
+  --text: #111317;
+  --muted: #555b66;
+  --border: #e3e5ea;
+  --focus: #1a73e8;
+  --primary: #191d24;
+  --primary-contrast: #ffffff;
+  --danger: #e53935;
+  --danger-contrast: #ffffff;
+
+  --radius-s: 8px;
+  --radius-m: 12px;
+
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.25rem;
+  --space-5: 1.75rem;
+  --space-6: 2.25rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  min-height: 100%;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+  font-size: clamp(15px, 1.1vw, 18px);
+}
+
+/* container FLUIDO: ocupa até 92vw e limita em 1280px */
+.container {
+  width: 100%;
+  max-width: min(1280px, 92vw);
+  margin-inline: auto;
+  padding-inline: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+/* acessibilidade */
+*:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+a { color: inherit; }
+
+/* utilitários */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  box-shadow: 0 4px 18px #0001;
+}
+
+.muted { color: var(--muted); }
+
+/* espaçamento padrão de seções */
+section {
+  padding-block: var(--space-5);
+}
+
+/* header fixo já está com container no App; garante sombra leve */
+header { box-shadow: 0 2px 8px #0001; }
+
+/* footer ocupando toda a largura, mas centrado internamente */
+footer .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  padding-block: var(--space-3);
+}
