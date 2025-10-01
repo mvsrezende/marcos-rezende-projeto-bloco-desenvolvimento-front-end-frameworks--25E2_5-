@@ -1,15 +1,14 @@
-export type Evento = {
+export type EventItem = {
   id: number;
   nome: string;
   data: string;
   local: string;
-  tenant?: string;
   arquivado?: boolean;
 };
 
-export type Ingresso = {
+export type Ticket = {
   id: number;
-  eventoId: number;
+  eventId: number;
   nomeEvento: string;
   data: string;
   local: string;

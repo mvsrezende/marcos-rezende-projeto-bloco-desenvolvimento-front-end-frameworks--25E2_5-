@@ -1,13 +1,29 @@
 {
   "expo": {
-    "name": "Ingressos Online",
-    "slug": "ingressos-mobile-expo",
-    "scheme": "ingressos",
-    "plugins": ["expo-router"],
-    "android": { "package": "com.seuorg.ingressos" },
-    "ios": { "bundleIdentifier": "com.seuorg.ingressos" },
-    "extra": {
-      "eas": { "projectId": "00000000-0000-0000-0000-000000000000" }
+    "name": "marcos-rezende-projeto-bloco-desenvolvimento-front-end-frameworks-25e2_5",
+    "slug": "snack-b8cf6a84-ea45-4ba5-b7d8-42b13c6463a1",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
   }
 }
