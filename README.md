@@ -1,126 +1,253 @@
-# Sistema Simples de Venda de Ingressos Online — Revisão TP4 e Plano TP5
+# Ingressos Online — Web + Mobile (Expo/React Native)
 
-## 1) Mudanças de Requisitos (conforme feedback do professor)
-- **Autenticação**: incluir **cadastro**, **login/logout** e **separação por espaço/cliente/empresa** (multi-tenant).
-- **CRUD do recurso-core (Eventos)**: entregar as 4 visões — **Overview (lista)**, **Focus (detalhe)**, **Make (criar/editar)**, **Do (ação rápida)**.
-- **Dashboard/Resumo**: cards/gráfico simples (eventos disponíveis, ingressos comprados, próximas datas).
-- **Notificações & Mobile**: **pull-to-refresh**, **swipe** para ação rápida (ex.: arquivar), **push local/toast** em mudanças de estado.
-- **Relatórios/Exportação**: botão **Exportar CSV** (Meus Ingressos) e/ou **Enviar e-mail** (mock com confirmação).
-- **Acessibilidade (a11y)**: navegação por teclado, contraste, `aria-*`, rótulos, foco visível.
-- **SASS**: criar **página de apresentação da solução SASS** demonstrando variáveis, mixins e organização (Mobile-First).
-- **Correção de navegação**: links não devem levar todos ao mesmo destino; garantir âncoras/rotas corretas.
-- **Testes automatizados**: smoke + unit (componentes-chave) + acessibilidade básica (axe/core).
+Um projeto **full stack front-end** (web + mobile) para gerenciamento de **eventos** e **ingressos** com autenticação Firebase, câmera integrada, exportação de CSV e boas práticas de acessibilidade.
+
+> **Teste rápido (mobile no navegador):**  
+> Abra o app mobile diretamente no Snack (Expo)  
+> 👉 https://snack.expo.dev/@marcos-rezende-infnet/marcos-rezende-projeto-bloco-desenvolvimento-front-end-frameworks-25e2_5?platform=web
 
 ---
 
-## 2) Histórias de Usuário Revisadas (com critérios de aceitação)
-
-### 2.1 Autenticação & Usuários
-**Como usuário**, quero **me cadastrar** e **entrar/sair** do sistema, para acessar recursos protegidos.
-- CA:
-  - Tela de **Cadastro** (nome, e-mail, senha) e **Login** (e-mail/usuário + senha).
-  - **Logout** limpa sessão/estado.
-  - Erros e validações visíveis; suporte a teclado e leitores de tela.
-  - (Opcional) Persistência simples (localStorage) para manter sessão.
-
-**Como admin de um cliente (tenant)**, quero operar apenas **meus dados**.
-- CA:
-  - Contexto de **tenant** definido no login.
-  - Listas e operações **filtradas por tenant**.
-
-### 2.2 CRUD do Recurso-Core (Eventos)
-**Como admin**, quero **listar** eventos (**Overview**), ver **detalhes** (**Focus**), **criar/editar** (**Make**) e executar **ações rápidas** (**Do**) para manter a vitrine atualizada.
-- CA:
-  - Overview: lista com nome/data/local, busca simples e paginação mínima.
-  - Focus: página/modal com dados completos.
-  - Make: formulário com validação; sucesso mostra toast; acessível.
-  - Do: **swipe** em mobile para **arquivar**/**remover** rapidamente; confirmação.
-
-### 2.3 Compra de Ingressos e Notificações
-**Como usuário**, quero **comprar** ingressos e receber **notificação** de sucesso.
-- CA:
-  - Botão “Comprar” adiciona ingresso; atualiza **Meus Ingressos**.
-  - **Toast** imediato (e push local quando disponível).
-  - **Pull-to-refresh** na lista de eventos para simular atualização.
-
-### 2.4 Dashboard/Resumo
-**Como usuário/admin**, desejo um **dashboard** com visão rápida do sistema.
-- CA:
-  - Cards: total de eventos, ingressos comprados, próximas datas.
-  - (Opcional) Gráfico simples de compras por mês.
-
-### 2.5 Relatórios/Exportação
-**Como usuário**, quero **exportar CSV** dos meus ingressos e/ou **enviar por e-mail** (mock) para registro.
-- CA:
-  - Botão “Exportar CSV” em Meus Ingressos.
-  - “Enviar por e-mail” exibe confirmação (mock).
-
-### 2.6 Acessibilidade
-**Como pessoa com necessidades de acessibilidade**, quero **usar o sistema por teclado** e leitor de tela.
-- CA:
-  - Foco visível, ordem lógica de tabulação.
-  - Labels e `aria-*` nos controles.
-  - Contraste mínimo WCAG AA nas cores.
-
-### 2.7 SASS — Apresentação
-**Como avaliador**, quero ver uma **página SASS** exibindo **variáveis, mixins e utilitários** para comprovar o uso.
-- CA:
-  - Página “SASS” com exemplos de tokens (cores, espaçamentos), mixins (breakpoints), nesting e BEM.
+## Sumário
+- [Visão geral](#visão-geral)
+- [Funcionalidades](#funcionalidades)
+- [Arquitetura do repositório](#arquitetura-do-repositório)
+- [Stack técnico](#stack-técnico)
+- [Pré‑requisitos](#pré-requisitos)
+- [Configuração de ambiente](#configuração-de-ambiente)
+- [Rodando o projeto (Web)](#rodando-o-projeto-web)
+- [Rodando o projeto (Mobile)](#rodando-o-projeto-mobile)
+- [Build e Deploy (Web)](#build-e-deploy-web)
+- [Acessibilidade](#acessibilidade)
+- [Diagnóstico e Câmera](#diagnóstico-e-câmera)
+- [Solução de problemas (FAQ)](#solução-de-problemas-faq)
+- [Roadmap](#roadmap)
+- [Licença](#licença)
 
 ---
 
-## 3) Backlog Priorizado (mapeado a componentes e status)
+## Visão geral
+Este repositório contém duas aplicações:
+- **Web (React + TypeScript)**: SPA com autenticação, CRUD local de eventos, câmera via `getUserMedia`, exportação de CSV e toasts.
+- **Mobile (Expo/React Native)**: app com autenticação, navegação por abas (Dashboard, Eventos, Meus Ingressos) e câmera com `expo-camera`.
 
-| ID | Épico              | História/Feature                                | Componentes/Rotas                         | Status       | Sprint alvo |
-|----|--------------------|--------------------------------------------------|-------------------------------------------|--------------|-------------|
-| A1 | Autenticação       | Cadastro + Login + Logout                        | `/login`, `AuthForm`, `AuthContext`       | **Novo**     | S1          |
-| A2 | Multi-tenant       | Escopo por cliente/empresa                       | `AuthContext`, filtros no Events API      | **Novo**     | S2          |
-| C1 | Eventos Overview   | Lista com busca, paginação                       | `Eventos`                                 | Em andamento | S1          |
-| C2 | Eventos Focus      | Detalhe do evento                                | `EventoDetalhe` (modal/section)           | **Novo**     | S1          |
-| C3 | Eventos Make       | Criar/Editar evento (form)                       | `EventoForm`                              | **Novo**     | S1          |
-| C4 | Eventos Do         | Swipe (arquivar/remover) + confirmação           | `EventosItem`, gesto mobile               | **Novo**     | S2          |
-| D1 | Dashboard          | Cards + (opcional) gráfico simples               | `Dashboard`                               | **Novo**     | S1          |
-| N1 | Notificações       | Toast/push em compra/CRUD                        | `Toast`, `useNotifications`               | **Novo**     | S1          |
-| M1 | Pull-to-Refresh    | Atualizar lista de eventos                       | `Eventos` (mobile)                        | **Novo**     | S2          |
-| R1 | Exportação CSV     | Exportar “Meus Ingressos”                        | `MeusIngressos`, `csvExport.ts`           | **Novo**     | S1          |
-| X1 | Acessibilidade     | Foco, `aria-*`, contraste                         | Globais + componentes                     | **Novo**     | S1–S2       |
-| S1 | SASS Page          | Página de apresentação SASS                      | `SassShowcase` + scss                     | **Novo**     | S2          |
-| T1 | Testes             | Smoke + unit + a11y (axe-core)                   | `__tests__/...`                           | **Novo**     | S2          |
-| NAV| Navegação correta  | Corrigir links que caem no mesmo destino         | `Header` + ancoragem/rotas                | **Novo**     | S1          |
-
-**Status atual do código (TP2):** `Header`, `Eventos` (lista simples), `MeusIngressos`, `Sobre`, `Footer`, **Login mock**.  
-**A implementar (TP5):** A1, A2, C2–C4, D1, N1, M1, R1, X1, S1, T1, NAV.
+> **Observação**: Os **eventos/ingressos** são mantidos **em memória** (estado do app). O Firebase Firestore está preparado, mas **não há persistência real** de domínio por padrão.
 
 ---
 
-## 4) Mapeamento História → Componentes
-- **Autenticação**: `AuthContext` (estado global), `Login`/`Register` (forms), `Header` (user/Logout).
-- **CRUD Eventos**: `Eventos` (Overview), `EventoDetalhe` (Focus), `EventoForm` (Make), `EventosItem` com swipe (Do).
-- **Dashboard**: `Dashboard` + `Card` + (opcional) `MiniChart`.
-- **Notificações**: `Toast` (portals) + `useNotifications()`; **push local** (Notification API) quando suportado.
-- **Relatórios**: util `csvExport.ts` (gera blob CSV).
-- **Acessibilidade**: atributos e tokens globais; revisar `tabIndex`, `aria-*`, foco.
-- **SASS**: `SassShowcase` + `styles/` (`_variables.scss`, `_mixins.scss`, `_globals.scss`).
+## Funcionalidades
+- 🔐 **Autenticação (Firebase Authentication)**: login, cadastro e logout.
+- 🧭 **Navegação protegida** (Web e Mobile).
+- 🗂️ **Eventos**: lista, busca, criar/editar, arquivar e remover (estado local).
+- 🎟️ **Meus Ingressos**: compra de ingresso (associa evento ao usuário).
+- 📷 **Câmera**:
+  - **Web**: captura com `getUserMedia` (HTTPS requerido).
+  - **Mobile**: `expo-camera` com modal de captura e anexação.
+- 📤 **Exportar CSV**: exportação da lista de ingressos (Web).
+- 🔔 **Toasts** (feedback de ações).
+- ♿ **Acessibilidade**: `SkipLink`, `aria-live`, foco gerenciado, contraste.
+- 🎨 **SASS / Design tokens**: variáveis e mixins (página de showcase).
 
 ---
 
-## 5) Definição de Pronto (DoD) para TP5
-- Feature atendendo **critérios de aceitação**.
-- **A11y** básica validada (foco/aria/contraste).
-- **Testes**: pelo menos 1 smoke/unit por feature crítica.
-- **Docs**: README atualizado (o que é, como usar, limitações).
-- **Responsive/Mobile-First** funcional.
-- **Sem erros** no console.
+## Arquitetura do repositório
+```
+.
+├─ web/                         # App Web (CRA/React 18+TS)
+│  ├─ src/
+│  │  ├─ App.tsx               # Rotas (públicas e protegidas)
+│  │  ├─ context/
+│  │  │  ├─ AuthContext.tsx    # Firebase Auth (v12 modular)
+│  │  │  └─ ToastContext.tsx   # Toasts
+│  │  ├─ components/           # Header, Footer, Formulários, Modais, etc.
+│  │  ├─ pages/                # Dashboard, Eventos, MeusIngressos, etc.
+│  │  ├─ services/firebase.ts  # init do Firebase
+│  │  ├─ utils/                # env, csvExport, helpers
+│  │  └─ styles/               # SASS (variables + mixins)
+│  ├─ public/
+│  ├─ package.json
+│  └─ Dockerfile               # build + NGINX (SPA)
+│
+└─ mobile/                      # App Mobile (Expo 53 / RN 0.79)
+   ├─ App.tsx
+   ├─ src/
+   │  ├─ AuthContext.tsx       # Firebase Auth (SDK compat v8)
+   │  ├─ EventsContext.tsx     # Estado de eventos/ingressos (local)
+   │  ├─ navigation.tsx        # Stack + Bottom Tabs
+   │  ├─ components/
+   │  ├─ screens/
+   │  ├─ firebase.ts           # init (compat), shims e long polling
+   │  ├─ shim.ts               # polyfills RN
+   │  └─ config.ts             # chaves do Firebase (dev)
+   ├─ package.json
+   └─ app.json / babel.config.js
+```
 
 ---
 
-## 6) Plano de Sprints (curto)
-- **S1**: A1, NAV, C2, C3, D1, N1, R1, X1 (parcial).
-- **S2**: A2, C4 (swipe), M1 (pull-to-refresh), S1 (SASS page), T1, X1 (final).
+## Stack técnico
+**Web**
+- React 18, TypeScript, React Router
+- Firebase JS SDK **modular (v9+) / v12**: `auth`, `firestore`
+- SASS + CSS Modules
+- Build com Docker/NGINX
+
+**Mobile**
+- Expo SDK 53, React Native 0.79
+- `expo-camera`, `@react-navigation/*`, `react-native-paper`
+- Firebase SDK **compat v8** (com polyfills)
 
 ---
 
-## 7) Riscos e Mitigações
-- Tempo x escopo → priorizar MVP por épico (entregar valor primeiro).
-- Multi-tenant complexo → iniciar com **tenant em memória** (mock) e filtros locais.
-- Push/Notificação → fallback para **toast** se API Notification indisponível.
+## Pré‑requisitos
+- **Node.js** 18 LTS ou 20 LTS
+- **npm** 9+ ou **pnpm/yarn** (opcional)
+- **Expo CLI** (`npm i -g expo`)
+- Dispositivo Android/iOS com **Expo Go** (opcional) ou emulador
+- Para **câmera no Web**: **HTTPS** habilitado (ou `localhost`)
+
+---
+
+## Configuração de ambiente
+Crie um arquivo `.env` **na pasta `web/`** com as chaves do Firebase (exemplo):
+
+```ini
+# web/.env
+REACT_APP_FIREBASE_API_KEY=...
+REACT_APP_FIREBASE_AUTH_DOMAIN=...
+REACT_APP_FIREBASE_PROJECT_ID=...
+REACT_APP_FIREBASE_STORAGE_BUCKET=...
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
+REACT_APP_FIREBASE_APP_ID=...
+```
+
+No **mobile**, as chaves ficam em `mobile/src/config.ts`:
+
+```ts
+// mobile/src/config.ts
+export const firebaseConfig = {
+  apiKey: "...",
+  authDomain: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
+};
+```
+
+> **Dica**: para evitar commit de segredos, garanta que `.env` esteja no `.gitignore`. As chaves públicas do Firebase não concedem acesso ao projeto sem regras adequadas no Firestore, mas trate-as como **config sensível**.
+
+---
+
+## Rodando o projeto (Web)
+```bash
+cd web
+npm ci
+cp .env.example .env   # se existir; caso contrário, crie a partir do bloco acima
+npm start
+```
+- O app sobe em `http://localhost:3000`.
+- Rotas protegidas requerem login no Firebase Auth.
+
+### Scripts úteis (web)
+```bash
+npm run build     # build de produção
+npm test          # testes (se configurados)
+```
+
+---
+
+## Rodando o projeto (Mobile)
+
+### 1) Testar diretamente no navegador (Snack)
+Abra o link e rode **sem instalar nada**:
+- 👉 https://snack.expo.dev/@marcos-rezende-infnet/marcos-rezende-projeto-bloco-desenvolvimento-front-end-frameworks-25e2_5?platform=web
+
+> Observação: alguns recursos (ex.: câmera) podem ter limitações no navegador do Snack.
+
+### 2) Rodar localmente (Expo)
+```bash
+cd mobile
+npm ci
+expo start
+```
+- Pressione **a** (Android), **i** (iOS) ou **w** (web).
+- Para testar em dispositivo físico, instale **Expo Go** e escaneie o QR code.
+
+---
+
+## Build e Deploy (Web)
+
+### Build de produção
+```bash
+cd web
+npm ci
+npm run build
+```
+Os artefatos ficam em `web/build/`.
+
+### Docker (NGINX)
+O `web/Dockerfile` faz o build e serve via NGINX:
+```bash
+cd web
+docker build -t ingressos-web:prod .
+docker run -p 8000:80 ingressos-web:prod
+```
+
+**SPA e roteamento**: o NGINX está configurado para `try_files $uri /index.html;` garantindo que as rotas do React funcionem em refresh.
+
+**HTTPS é obrigatório** para `getUserMedia` (câmera) no navegador – use TLS (Let's Encrypt, CloudFront, etc.) em produção.
+
+---
+
+## Acessibilidade
+- **Skip to content** (SkipLink)
+- **Toasts com `aria-live`** para feedback não intrusivo
+- **Foco gerenciado** ao entrar em modais/rotas
+- **Contraste** e navegação por teclado testadas nas principais telas
+
+---
+
+## Diagnóstico e Câmera
+- **Web**: página de *Diagnóstico* verifica `isSecureContext`, `mediaDevices` e permissões.
+- **Mobile**: `expo-camera` pede permissão em runtime. O modal de câmera integra com *Meus Ingressos*.
+
+> Em ambiente **não seguro** (sem HTTPS), os browsers podem bloquear a câmera.
+
+---
+
+## Solução de problemas (FAQ)
+
+**A câmera não funciona no Web.**
+- Verifique se está em **HTTPS** (ou em `localhost`).
+- Permissões do navegador: limpe e reautorize.
+- Outra aba/app está usando a câmera? Feche-a.
+
+**Erro de autenticação Firebase.**
+- Confirme as chaves no `.env` (web) / `config.ts` (mobile).
+- Verifique se o **domínio** está autorizado no Console Firebase (Authentication → Settings).
+
+**No Snack (web) algo não abre.**
+- Alguns módulos RN têm limitações no ambiente do navegador do Snack. Rode localmente com `expo start` para validar.
+
+**`expo-camera` pede permissão e não abre.**
+- Reinstale o app no Expo Go e garanta permissão em `Configurações → App → Câmera`.
+
+---
+
+## Roadmap
+- 🔄 Persistir **Eventos/Ingressos** no **Firestore** (`tenants/{tenant}/events` e `users/{uid}/tickets`) com regras de segurança.
+- 🔍 Busca e filtros avançados (por data, preço, categoria).
+- 🧾 PDFs/Passes de ingresso com QRCode.
+- ☁️ Sincronização offline-first no mobile.
+- 🧪 Testes E2E (Detox/Playwright).
+
+---
+
+## Licença
+Distribuído sob a licença MIT. Sinta-se à vontade para usar e contribuir.
+
+---
+
+**Autor**  
+Marcos Rezende — Projeto acadêmico (Infnet) / Estudo prático de Web + Mobile com Firebase e Expo.

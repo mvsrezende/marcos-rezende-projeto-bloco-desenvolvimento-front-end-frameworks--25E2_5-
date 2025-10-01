@@ -1,30 +1,51 @@
 import { useEffect, useRef, useState } from "react";
-import { AuthProvider, useAuth } from "./src/context/AuthContext";
-import { ToastProvider } from "./src/context/ToastContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ToastProvider } from "./context/ToastContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Header from "./src/components/Header/Header";
-import AuthForm from "./src/components/AuthForm/AuthForm";
-import Dashboard from "./src/components/Dashboard/Dashboard";
-import Eventos from "./src/components/Eventos/Eventos";
-import MeusIngressos from "./src/components/MeusIngressos/MeusIngressos";
-import Sobre from "./src/components/Sobre/Sobre";
-import Footer from "./src/components/Footer/Footer";
-import Toast from "./src/components/Toast/Toast";
-import SkipLink from "./src/components/SkipLink/SkipLink";
-import SassShowcase from "./src/components/SassShowcase/SassShowcase";
-import CameraCapture from "./src/components/CameraCapture/CameraCapture";
-import Diagnostics from "./src/components/Diagnostics/Diagnostics";
-import CameraModal from "./src/components/CameraModal/CameraModal";
-import ProtectedRoute from "./src/routes/ProtectedRoute";
-import type { Evento } from "./src/components/EventoForm/EventoForm";
+import Header from "./components/Header/Header";
+import AuthForm from "./components/AuthForm/AuthForm";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Eventos from "./components/Eventos/Eventos";
+import MeusIngressos from "./components/MeusIngressos/MeusIngressos";
+import Sobre from "./components/Sobre/Sobre";
+import Footer from "./components/Footer/Footer";
+import Toast from "./components/Toast/Toast";
+import SkipLink from "./components/SkipLink/SkipLink";
+import SassShowcase from "./components/SassShowcase/SassShowcase";
+import CameraCapture from "./components/CameraCapture/CameraCapture";
+import Diagnostics from "./components/Diagnostics/Diagnostics";
+import CameraModal from "./components/CameraModal/CameraModal";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import type { Evento } from "./components/EventoForm/EventoForm";
 
 type Ingresso = Evento & { foto?: string };
 
 function seed(tenant: string): Evento[] {
   return [
-    { id: 1, nome: "Show de Rock", data: "2025-10-12", local: "Arena Central", tenant, arquivado: false },
-    { id: 2, nome: "Festival de Comida", data: "2025-11-05", local: "Praça Verde", tenant, arquivado: false },
-    { id: 3, nome: "Peça de Teatro", data: "2025-12-01", local: "Teatro Municipal", tenant, arquivado: false }
+    {
+      id: 1,
+      nome: "Show de Rock",
+      data: "2025-10-12",
+      local: "Arena Central",
+      tenant,
+      arquivado: false,
+    },
+    {
+      id: 2,
+      nome: "Festival de Comida",
+      data: "2025-11-05",
+      local: "Praça Verde",
+      tenant,
+      arquivado: false,
+    },
+    {
+      id: 3,
+      nome: "Peça de Teatro",
+      data: "2025-12-01",
+      local: "Teatro Municipal",
+      tenant,
+      arquivado: false,
+    },
   ];
 }
 
@@ -46,7 +67,10 @@ function AppShell() {
   }, [isAuthenticated]);
 
   function handleComprar(evento: Evento) {
-    setMeusIngressos((prev) => [...prev, { ...evento, tenant: tenant || undefined, foto: undefined }]);
+    setMeusIngressos((prev) => [
+      ...prev,
+      { ...evento, tenant: tenant || undefined, foto: undefined },
+    ]);
     show("success", `Ingresso comprado: ${evento.nome}`);
   }
   function criarEvento(e: Omit<Evento, "id">) {
@@ -58,7 +82,9 @@ function AppShell() {
     });
   }
   function atualizarEvento(e: Evento) {
-    setEventos((prev) => prev.map((it) => (it.id === e.id ? { ...it, ...e } : it)));
+    setEventos((prev) =>
+      prev.map((it) => (it.id === e.id ? { ...it, ...e } : it))
+    );
     show("info", `Evento atualizado: ${e.nome}`);
   }
   function removerEvento(id: number) {
@@ -68,7 +94,9 @@ function AppShell() {
   }
   function arquivarEvento(id: number) {
     const alvo = eventos.find((it) => it.id === id);
-    setEventos((prev) => prev.map((it) => (it.id === id ? { ...it, arquivado: true } : it)));
+    setEventos((prev) =>
+      prev.map((it) => (it.id === id ? { ...it, arquivado: true } : it))
+    );
     show("warn", `Evento arquivado: ${alvo?.nome || id}`);
   }
   function refreshEventos() {
@@ -80,28 +108,52 @@ function AppShell() {
   }
   function onCaptured(photo: string) {
     if (attachId == null) return;
-    setMeusIngressos((prev) => prev.map((ing) => (ing.id === attachId ? { ...ing, foto: photo } : ing)));
+    setMeusIngressos((prev) =>
+      prev.map((ing) => (ing.id === attachId ? { ...ing, foto: photo } : ing))
+    );
     setAttachId(null);
     show("success", "Foto anexada ao ingresso.");
   }
   function onRemovePhoto(id: number) {
-    setMeusIngressos((prev) => prev.map((ing) => (ing.id === id ? { ...ing, foto: undefined } : ing)));
+    setMeusIngressos((prev) =>
+      prev.map((ing) => (ing.id === id ? { ...ing, foto: undefined } : ing))
+    );
     show("info", "Foto removida do ingresso.");
   }
 
   return (
     <>
       <SkipLink />
-      {isAuthenticated && user && <Header username={user.displayName || user.email || ""} tenant={tenant || undefined} onLogout={logout} />}
+      {isAuthenticated && user && (
+        <Header
+          username={user.displayName || user.email || ""}
+          tenant={tenant || undefined}
+          onLogout={logout}
+        />
+      )}
       <main id="main-content" className="container" ref={mainRef} tabIndex={-1}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route
             path="/login"
-            element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <AuthForm />}
+            element={
+              isAuthenticated ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <AuthForm />
+              )
+            }
           />
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard eventos={eventos} totalIngressos={meusIngressos.length} />} />
+            <Route
+              path="/dashboard"
+              element={
+                <Dashboard
+                  eventos={eventos}
+                  totalIngressos={meusIngressos.length}
+                />
+              }
+            />
             <Route
               path="/eventos"
               element={
@@ -136,7 +188,9 @@ function AppShell() {
       </main>
       {isAuthenticated && <Footer />}
       <Toast />
-      {attachId !== null && <CameraModal onClose={() => setAttachId(null)} onCapture={onCaptured} />}
+      {attachId !== null && (
+        <CameraModal onClose={() => setAttachId(null)} onCapture={onCaptured} />
+      )}
     </>
   );
 }
