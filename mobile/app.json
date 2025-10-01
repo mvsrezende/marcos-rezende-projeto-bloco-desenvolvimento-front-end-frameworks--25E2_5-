@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Ingressos Online",
+    "slug": "ingressos-mobile-expo",
+    "scheme": "ingressos",
+    "plugins": ["expo-router"],
+    "android": { "package": "com.seuorg.ingressos" },
+    "ios": { "bundleIdentifier": "com.seuorg.ingressos" },
+    "extra": {
+      "eas": { "projectId": "00000000-0000-0000-0000-000000000000" }
+    }
+  }
+}
